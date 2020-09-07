@@ -1,0 +1,23 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=bing-ip2hosts
+pkgver=1.0
+pkgrel=1
+groups=('blackarch' 'blackarch-recon')
+pkgdesc='Enumerates all hostnames which Bing has indexed for a specific IP address.'
+arch=('any')
+url='http://www.morningstarsecurity.com/research/bing-ip2hosts'
+license=('GPL3')
+depends=('bash' 'wget' 'bind-tools')
+source=("https://dl.packetstormsecurity.net/UNIX/scanners/$pkgname-$pkgver.zip")
+sha512sums=('63addc59f0173189b4c4c6190a894854b52bde3270a44c99ca4e6273b799fabcfafdd5fb089400f7ea354e9918ce6274f67f762d1e57e19a43c095966ae626d8')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md CHANGELOG
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

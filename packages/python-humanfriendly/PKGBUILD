@@ -1,0 +1,51 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-humanfriendly
+pkgname=('python2-humanfriendly' 'python-humanfriendly')
+_pkgname=humanfriendly
+pkgver=8.1
+pkgrel=1
+pkgdesc='Human friendly output for text interfaces using Python.'
+arch=('any')
+url='https://pypi.org/project/humanfriendly/#files'
+license=('MIT')
+options=(!emptydirs)
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/2e/d1/e0d8db85b71fc6e7d5be7d78bb5db64c63790aec45acef6578190d66c666/$_pkgname-$pkgver.tar.gz")
+sha512sums=('bdd03f5debb700244bb3a17d0b39285aaeb6ef037fc7d4750360684dbfae11551ad8a433e0f7a3a952b79c236305dfd2e4f98bbe21ba90a4c191bb0ba3dabb70')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-humanfriendly() {
+  depends=('python2' 'python2-monotonic')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+
+  mv "$pkgdir/usr/bin/humanfriendly" "$pkgdir/usr/bin/humanfriendly2"
+}
+
+package_python-humanfriendly() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

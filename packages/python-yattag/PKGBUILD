@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-yattag
+pkgname=('python2-yattag' 'python-yattag')
+_pkgname=yattag
+pkgver=1.13.2
+pkgrel=1
+pkgdesc='Generate HTML or XML in a pythonic way.'
+arch=('any')
+url='https://pypi.org/project/yattag/#files'
+license=('LGPL')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/dd/f4/2c904634a8b2bc9e121eda9fd03deb7810b4414263e647ff27c4dab3caaa/$_pkgname-$pkgver.tar.gz")
+sha512sums=('d39f8f8a53367d860112443d947d946d5eabe329f4d928a74b68bfbe20d91aee375c9ffc326f901dac50a49b17421aeb58b1701d5a67f79d1477f87afed1832a')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-yattag() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-yattag() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

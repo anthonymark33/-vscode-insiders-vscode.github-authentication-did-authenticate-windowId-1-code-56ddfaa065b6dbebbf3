@@ -1,0 +1,45 @@
+# This file is part of BlackArch Linux ( http://blackarch.org ).
+# See COPYING for license details.
+
+pkgname=hiddeneye
+pkgver=812.525ed22
+pkgrel=1
+pkgdesc='Modern phishing tool with advanced functionality.'
+arch=('any')
+groups=('blackarch' 'blackarch-social')
+url='https://github.com/DarkSecDevelopers/HiddenEye'
+license=('MIT')
+depends=('php' 'python-wget')
+makedepends=('git')
+replaces=('hidden-eye')
+source=("$pkgname::git+https://github.com/DarkSecDevelopers/HiddenEye.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" *.md
+  install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname/LICENSE" LICENSE
+
+  rm LICENSE *.md requirements.txt
+
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python HiddenEye.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

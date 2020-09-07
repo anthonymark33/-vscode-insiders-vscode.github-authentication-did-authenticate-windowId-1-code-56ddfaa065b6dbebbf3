@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pywebview
+pkgname=('python2-pywebview' 'python-pywebview')
+_pkgname=pywebview
+pkgver=3.2
+pkgrel=1
+pkgdesc='A cross-platform lightweight native wrapper around a web view component.'
+arch=('any')
+url='https://pypi.org/project/pywebview/#files'
+license=('BSD')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/12/e6/80034772a822b5b4e8c2be54b795cfb5e41c845b1d9f77b58978e725bd7c/$_pkgname-$pkgver.tar.gz")
+sha512sums=('3f0ebaefec0faff024b8885e8aa27e668efd5aa709c411ba34221da096b6334213b16734b18e5ce2e6f2071561ec32995e152bb3cfbd2580931b1f0c5b7569a3')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-pywebview() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-pywebview() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

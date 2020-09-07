@@ -1,0 +1,20 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=snyk
+pkgver=1.265.0
+pkgrel=1
+pkgdesc='CLI and build-time tool to find and fix known vulnerabilities in open-source dependencies.'
+arch=('any')
+groups=('blackarch' 'blackarch-code-audit' 'blackarch-scanner')
+url='https://github.com/snyk/snyk'
+license=('Apache')
+source=("https://github.com/$pkgname/$pkgname/releases/download/v$pkgver/$pkgname-linux")
+sha512sums=('67a0f6cab20ab87d1b9daf7eb207d340b792419f0ee976922d2be2095d2fb02023235b59e983d862ecd6390925a1cebf5fa4d20aa10fbb76532b33bd15f254e5')
+noextract=('snyk-linux')
+options=('!strip')
+
+package() {
+  install -Dm 755 "$pkgname-linux" "$pkgdir/usr/bin/$pkgname"
+}
+

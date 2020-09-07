@@ -1,0 +1,49 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-bitstring
+pkgname=('python2-bitstring' 'python-bitstring')
+_pkgname=bitstring
+pkgver=3.1.6
+pkgrel=2
+pkgdesc='Simple construction, analysis and modification of binary data.'
+arch=('any')
+url='https://pypi.org/project/bitstring/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools' 'unzip')
+options=(!emptydirs)
+source=("https://files.pythonhosted.org/packages/f4/87/fe6f7093088f4396e84c1b5d5dfb08c4840487ad46ff4805b7008c8f5ffc/bitstring-3.1.6.tar.gz")
+sha512sums=('ff471ad1469e2bd7a0716484ddc3d6ce1bf979b7bcef4c393b61f47211d22a66edcbcb8bed299ca72dc59ddae24e568d718b98d30f4348a3478aac98e781282b')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-bitstring() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-bitstring() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

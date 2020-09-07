@@ -1,0 +1,23 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=pingcastle
+pkgver=2.7.1.1
+pkgrel=1
+pkgdesc='Active Directory scanning tool.'
+groups=('blackarch' 'blackarch-windows')
+arch=('any')
+makedepends=('unzip' 'curl')
+url='https://www.pingcastle.com'
+source=("$pkgname.zip::https://github.com/vletoux/pingcastle/releases/download/$pkgver/PingCastle_$pkgver.zip")
+md5sums=('9a253b2bb41a9a2e9f72be938a0a1e38')
+sha512sums=('72ff614dd696ca6dccdcd40869dc5dde95a574b2fd6eb918dd9640fcad3219a2d8575c01bfed5284e5913a8f33a2c48e8ba565768151316a62dc5c8b44a090cd')
+
+package() {
+  targetDir="$pkgdir/usr/share/windows/$pkgname/"
+
+  install -dm 755 $targetDir
+
+  unzip -d $targetDir "$pkgname.zip"
+}
+

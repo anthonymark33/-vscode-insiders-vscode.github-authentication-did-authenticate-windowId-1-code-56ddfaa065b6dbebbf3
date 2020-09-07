@@ -1,0 +1,29 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-msrest
+_pkgname=msrest
+pkgver=0.6.13
+pkgrel=1
+pkgdesc='AutoRest swagger generator Python client runtime.'
+arch=('any')
+url='https://pypi.org/project/msrest/#files'
+license=('MIT')
+depends=('python' 'python-isodate' 'python-requests-oauthlib')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/f6/0d/bc78f3d63a4d202d64ee8c706af4d84b5716a8052a7e1e79aed1915c49d5/$_pkgname-$pkgver.tar.gz")
+sha512sums=('e72d520f15eb6b40ddb32b1425d899d45238fd0058c8c15410d0247144666209a3052df5dbd2eba0c2a307c8e39d7643d1542143cd65fc471177a820dd7af317')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

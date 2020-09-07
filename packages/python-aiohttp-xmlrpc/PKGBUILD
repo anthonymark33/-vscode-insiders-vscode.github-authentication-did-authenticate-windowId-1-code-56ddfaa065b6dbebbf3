@@ -1,0 +1,29 @@
+# This file is part of BlackArch Linux ( http://blackarch.org ).
+# See COPYING for license details.
+
+pkgname=python-aiohttp-xmlrpc
+_pkgname=aiohttp-xmlrpc
+pkgver=0.8.1
+pkgrel=1
+pkgdesc='aiohttp XML-RPC server handler and client.'
+arch=('any')
+url='https://pypi.org/project/aiohttp-xmlrpc/'
+license=('MIT')
+depends=('python' 'python-aiohttp' 'python-lxml')
+makedepends=('python-setuptools')
+options=(!emptydirs)
+source=("https://files.pythonhosted.org/packages/d9/5f/ccf7d8f12e59917fdabbd6b363c9d9863d1f5baac8499093ee7959d91f61/$_pkgname-$pkgver.tar.gz")
+sha512sums=('dde8dc210deaaf1b8faac0b6bd32d7778425e279592a7ba70403e6768d950425d9154019a4066b5327bd7daa858a7a3dae98d40c3c5efe335e0fe6d1f6b434c5')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

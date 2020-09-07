@@ -1,0 +1,31 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-googleapis-common-protos
+pkgver=1.51.0
+pkgrel=1
+pkgdesc='Common protobufs used in Google APIs.'
+arch=('any')
+url='https://pypi.org/project/googleapis-common-protos/#files'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/05/46/168fd780f594a4d61122f7f3dc0561686084319ad73b4febbf02ae8b32cf/$_pkgname-$pkgver.tar.gz")
+sha512sums=('31b6754d5541de4a6ce13e1e54dc54ee29c8153b57de3d0faf40bb236b6af9bee0516957f4b1f64f4404d713e3185126ef782a7825747fede827a8a8e604e303')
+
+build() {
+  cd "googleapis-common-protos-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "googleapis-common-protos-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+
+  # fix permissions
+  chmod 644 "$pkgdir/usr/lib/python3.8/site-packages/googleapis_common_protos-1.51.0-py3.8.egg-info/"*
+}
+

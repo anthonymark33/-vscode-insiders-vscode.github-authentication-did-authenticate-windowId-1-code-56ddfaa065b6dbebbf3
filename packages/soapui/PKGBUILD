@@ -1,0 +1,37 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=soapui
+pkgver=5.5.0
+pkgrel=1
+pkgdesc='The Swiss-Army Knife for SOAP Testing.'
+groups=('blackarch' 'blackarch-proxy' 'blackarch-fuzzer')
+arch=('x86_64')
+url='https://www.soapui.org/downloads/soapui/source-forge.html'
+license=('EUPL')
+depends=('java-environment')
+makedepends=('git')
+source=("https://s3.amazonaws.com/downloads.eviware/soapuios/$pkgver/SoapUI-$pkgver-linux-bin.tar.gz")
+sha512sums=('c0d8639e02f5d38992a7850d3ef45aaf05010723518a24b3995aa4a5b9d550d6500571fa34f0400ad4751ac03b010287b75a1ba83b77fa38f0c987790a74163e')
+
+package() {
+  cd "SoapUI-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/soapui"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md RELEASENOTES.txt
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md RELEASENOTES.txt LICENSE.txt
+
+  cp -a * "$pkgdir/usr/share/$pkgname"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec sh /usr/share/$pkgname/bin/$pkgname.sh "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

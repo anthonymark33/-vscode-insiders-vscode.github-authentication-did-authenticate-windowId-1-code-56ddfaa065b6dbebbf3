@@ -1,0 +1,31 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=yaf
+pkgver=2.11.0
+pkgrel=2
+pkgdesc='Yet Another Flowmeter.'
+groups=('blackarch' 'blackarch-networking')
+arch=('x86_64' 'aarch64')
+url='http://tools.netsa.cert.org/yaf/'
+license=('GPL')
+depends=('libltdl' 'libpcap' 'libfixbuf')
+source=("http://tools.netsa.cert.org/releases/$pkgname-$pkgver.tar.gz")
+sha512sums=('3f102cc99e3e90455f9177d01c19b02acc010185125fb94baeb84044cb98413c3ca6d311c5f7f7074d7eb2f3fc035eb6545ccd20629613b5a58fbf1c53eaef2b')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure --prefix=/usr --enable-applabel --enable-mpls --enable-plugins
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  mv "$pkgdir/usr/etc" "$pkgdir/etc"
+}
+

@@ -1,0 +1,30 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-folium
+_pkgname=folium
+pkgver=0.10.1
+pkgrel=1
+pkgdesc='Make beautiful maps with Leaflet.js & Python.'
+arch=('any')
+url='https://pypi.org/project/folium/#files'
+license=('MIT')
+depends=('python' 'python-branca' 'python-jinja' 'python-numpy'
+         'python-requests')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/79/dd/f935205a5b245430ca32bc8cd728467b21882fd78845dac791405a66d041/$_pkgname-$pkgver.tar.gz")
+sha512sums=('b81c2c88a190bae6567acd67ebb4b765af46d8435c58050c9791fabe60b8ea06f00ef2b6f86a0f8018512ab41ea20d1200dda2f6dba1144ca7b9df41e2ed3bf7')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+	--skip-build
+}
+

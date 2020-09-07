@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-google
+_pkgname=google
+pkgname=('python2-google' 'python-google')
+pkgver=2.0.3
+pkgrel=1
+pkgdesc='Python bindings to the Google search engine.'
+arch=('any')
+url='https://pypi.org/project/google/#files'
+license=('BSD')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/35/94/a4295b9d31a397c1df1f0a6a7f90f87457275c121f3471f013d500dff48a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('940a7f3626a626c427925dfc430423442853557f798f1fa5f660a1a8511eaf0bc29fe7adf286513297207e60bdf4c1b7dc3914b5fb892a5cf770841600b8ff0b')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-google() {
+  depends=('python2' 'python2-beautifulsoup4')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/google" "$pkgdir/usr/bin/google2"
+}
+
+package_python-google() {
+  depends=('python' 'python-beautifulsoup4')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

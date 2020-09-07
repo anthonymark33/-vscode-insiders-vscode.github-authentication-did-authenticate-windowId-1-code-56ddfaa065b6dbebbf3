@@ -1,0 +1,41 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=xsser
+pkgver=1.8
+pkgrel=1
+epoch=2
+groups=('blackarch' 'blackarch-webapp' 'blackarch-fuzzer'
+        'blackarch-exploitation')
+pkgdesc='A penetration testing tool for detecting and exploiting XSS vulnerabilites.'
+arch=('any')
+url='http://xsser.sourceforge.net/'
+license=('GPL3')
+depends=('orbited' 'python' 'python-beautifulsoup4' 'python-pycurl' 'pygtk'
+         'python-twisted' 'python-geoip' 'python-cairo' 'python-gobject'
+         'python-cffi')
+makedepends=('python-setuptools')
+optdepends=('pygtkmoz')
+source=("https://xsser.03c8.net/xsser/xsser_$pkgver-2.tar.gz")
+sha512sums=('c76be1a1879ee64ee65139da9e13654fe8428c1abb80ea2fd88d646d684cecb2d4c68f7a0ce8366c6c17fe29040f22c038bd0b4004fb51553de332e9b37a437e')
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" doc/*
+  rm -rf doc
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python $pkgname "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

@@ -1,0 +1,56 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=suricata
+pkgver=5.0.2
+pkgrel=1
+pkgdesc='An Open Source Next Generation Intrusion Detection and Prevention Engine.'
+arch=('x86_64' 'aarch64')
+url='https://suricata-ids.org/'
+groups=('blackarch' 'blackarch-defensive' 'blackarch-ids')
+license=('GPL2')
+depends=('zlib' 'nss' 'jansson' 'libcap-ng' 'libnetfilter_queue' 'libnfnetlink'
+         'libnet' 'libpcap' 'libyaml' 'pcre' 'python-magic' 'file' 'lua'
+         'luajit' 'geoip' 'libnetfilter_log' 'libmaxminddb')
+makedepends=('cargo')
+optdepends=('snort: suricata can use rulesets provided by snort')
+backup=('etc/suricata/suricata.yaml')
+source=("http://openinfosecfoundation.org/download/$pkgname-$pkgver.tar.gz")
+sha512sums=('e288f6aee9f8fafb8fa811d2c83a89a29434edc24e05542e172852dc139b9d0bb474d35ddbdc4723df04e7a8b4e70e181c822a4fb1315ba2879c3c7a5c16ef16')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+#  find "$srcdir" -type f -name '*.py' -exec \
+#    sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' {} +
+#  find "$srcdir" -type f -name '*.py' -exec \
+#    sed -i 's|#!/usr/bin/python|#!/usr/bin/python2|' {} +
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+    HAVE_PYTHON_CONFIG=/usr/bin/python3 --enable-gccprotect \
+    --enable-nfqueue --enable-nflog --enable-luajit --enable-geoip \
+    --disable-coccinelle --enable-old-barnyard2 --with-pic \
+    --enable-python
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/var/log/$pkgname"
+  install -dm 755 "$pkgdir/etc/$pkgname/rules"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 "$pkgname.yaml" "$pkgdir/etc/$pkgname/$pkgname.yaml"
+  install -Dm 644 etc/classification.config \
+    "$pkgdir/etc/$pkgname/classification.config"
+  install -Dm 644 etc/reference.config "$pkgdir/etc/$pkgname/reference.config"
+  install -Dm 644 rules/*.rules "$pkgdir/etc/$pkgname/rules/"
+}
+

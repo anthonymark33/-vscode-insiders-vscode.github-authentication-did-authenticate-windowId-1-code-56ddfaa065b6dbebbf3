@@ -1,0 +1,26 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=chkrootkit
+pkgver=0.53
+pkgrel=1
+groups=('blackarch' 'blackarch-defensive' 'blackarch-forensic')
+pkgdesc="Checks for rootkits on a system"
+url='http://www.chkrootkit.org/'
+arch=('any')
+license=('GPL2')
+source=("ftp://ftp.pangeia.com.br/pub/seg/pac/$pkgname-$pkgver.tar.gz")
+sha512sums=('f8de19d0a61ccb6ac184ad6642d78041729cba799eedcc8088cb6d2c5cf4de0574c6083caad364576a601265322e61c183b266304f00667527bf29fdc51359c7')
+
+build(){
+  cd "$pkgname-$pkgver"
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+

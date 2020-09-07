@@ -1,0 +1,33 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libesedb-python
+pkgname=('python2-libesedb-python' 'python-libesedb-python')
+_pkgname=libesedb-python
+pkgver=20191220
+pkgrel=1
+pkgdesc='Library and tools to access the Extensible Storage Engine (ESE) Database File (EDB) format.'
+url='https://github.com/libyal/libesedb'
+arch=('x86_64' 'aarch64')
+license=('LGPLv3+')
+makedepends=('python2-setuptools' 'python-setuptools')
+replaces=('python2-libesedb' 'python-libesedb')
+source=("https://files.pythonhosted.org/packages/a6/c5/252f87f4dad97b65b472fa946dbd9f4340271945194aab354b36029eb41b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('e2a7c42bd3ae9421cf065ecd6c181e197af903f1ac50e7a595c0391c354dde3eba73eef3110ead07bf4c9f26390b954f4c3fb743126381281b643560ec884fcc')
+
+package_python2-libesedb-python() {
+  depends=('python2')
+
+  cd "libesedb-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python-libesedb-python() {
+  depends=('python')
+
+  cd "libesedb-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

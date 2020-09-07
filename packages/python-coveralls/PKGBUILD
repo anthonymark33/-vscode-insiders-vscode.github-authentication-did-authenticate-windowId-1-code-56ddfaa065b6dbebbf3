@@ -1,0 +1,33 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=('python-coveralls' 'python2-coveralls')
+_pkgname=coveralls
+pkgver=2.0.0
+pkgrel=1
+pkgdesc='Show coverage stats online via coveralls.io.'
+arch=('any')
+url='https://github.com/coveralls-clients/coveralls-python'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/26/36/5edc1bbf0f18d6bfbf0d7d535965449bd510994c36b90e77b0bea1740714/$_pkgname-$pkgver.tar.gz")
+sha512sums=('dd1f44c475203aa4244209310cdf379e7e3a0dc58b1122b90f3a056598643daaf2a1983b3a6977aade2913a869a4e0255e88fd26c52d1839e783766b63dab8eb')
+
+package_python2-coveralls() {
+  depends=('python2' 'python2-coverage' 'python2-docopt' 'python2-requests')
+
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1
+
+  mv "$pkgdir/usr/bin/$_pkgname" "$pkgdir/usr/bin/${_pkgname}2"
+}
+
+package_python-coveralls() {
+  depends=('python' 'python-coverage' 'python-docopt' 'python-requests')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1
+}
+

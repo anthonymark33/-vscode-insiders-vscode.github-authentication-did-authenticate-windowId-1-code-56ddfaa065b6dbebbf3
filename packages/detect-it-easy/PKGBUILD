@@ -1,0 +1,42 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=detect-it-easy
+pkgver=86.3b45fdb
+pkgrel=1
+groups=('blackarch' 'blackarch-binary' 'blackarch-reversing')
+pkgdesc='A program for determining types of files.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/horsicq/Detect-It-Easy'
+license=('MIT')
+depends=('qt4')
+makedepends=('git' 'qt4')
+source=("$pkgname::git+https://github.com/horsicq/DIE-engine.git"
+        'build_console_lin.sh.patch')
+sha512sums=('SKIP'
+            '2f6e727e8511a2469b658947d1f93bb9a6954768037349feaa16a20fe3742b956b96829fffde42b3fc09f997ce193ca6bb1eb24fdfa13bf6223eb8b2b85b49a9')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  patch -p1 < build_console_lin.sh.patch
+}
+
+build() {
+  cd $pkgname
+
+  bash build_console_lin.sh
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 diec "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

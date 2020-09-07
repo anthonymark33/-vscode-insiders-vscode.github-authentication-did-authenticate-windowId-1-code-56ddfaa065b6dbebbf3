@@ -1,0 +1,29 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-scruffington
+_pkgname=scruffington
+pkgver=0.3.8.1
+pkgrel=2
+pkgdesc='The janitor.'
+url='https://pypi.org/project/scruffington/#files'
+arch=('any')
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/8d/c0/d6eb8f6ab605f847a0db979dfb1cd13760dd813555c8467ac8beba9c6d9b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('097a1b897695607289407841033764ab1bce5cfda117faa17bfad58365685fd924505b6512723e5a25e2ad630ef65a6d130fb1bbbd88515aba8e9c05a6deb0e6')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

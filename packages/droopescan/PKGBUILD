@@ -1,0 +1,33 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=droopescan
+pkgver=1.41.3
+pkgrel=3
+groups=('blackarch' 'blackarch-webapp' 'blackarch-scanner')
+pkgdesc='A plugin-based scanner that aids security researchers in identifying issues with several CMSs, mainly Drupal & Silverstripe.'
+arch=('any')
+url='https://github.com/droope/droopescan'
+license=('GPL3')
+depends=('python' 'python-cement' 'python-requests' 'python-pystache'
+         'python-mock' 'python-lxml' 'python-nose' 'python-beautifulsoup4'
+         'python-simplejson')
+makedepends=('git')
+source=("https://github.com/droope/$pkgname/archive/$pkgver.tar.gz")
+sha512sums=('9fee608a1b32bf0719a2adb2bd9c05752a4c2fae3777c78fedefb128bfea669185ccd029ae38cff46b698f4b32ca862fb7a3554e251d1af38769487e51cbec6b')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md CHANGELOG
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

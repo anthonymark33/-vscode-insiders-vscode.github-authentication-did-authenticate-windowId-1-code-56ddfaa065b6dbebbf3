@@ -1,0 +1,22 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=ruby-httparty
+_pkgname=httparty
+pkgver=0.18.0
+pkgrel=1
+pkgdesc='Makes http fun! Also, makes consuming restful web services dead easy.'
+arch=('any')
+url='https://rubygems.org/gems/httparty'
+license=('MIT')
+depends=('ruby' 'ruby-json' 'ruby-multi_xml' 'ruby-mime-types')
+source=("https://rubygems.org/gems/$_pkgname-$pkgver.gem")
+sha512sums=('1a26c9fd7cf530c484d016c07a532b2a8f65f5e8371e572ef186d8e4cc5faa56a3bdd56e508fbfb65b5ec225f23ec0b39379f71d4f39228dd1e55cb289cfe5c7')
+noextract=("httparty-$pkgver.gem")
+
+package() {
+  gem install --no-user-install --ignore-dependencies \
+    -i "$pkgdir$(ruby -rubygems -e'puts Gem.default_dir')" \
+    httparty-$pkgver.gem
+}
+

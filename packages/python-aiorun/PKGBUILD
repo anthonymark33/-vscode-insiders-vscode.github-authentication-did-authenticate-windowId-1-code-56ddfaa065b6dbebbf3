@@ -1,0 +1,28 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-aiorun
+_pkgname=aiorun
+pkgver=2020.2.1
+pkgrel=1
+pkgdesc='Boilerplate for asyncio applications.'
+arch=('any')
+url='https://pypi.org/project/aiorun/#files'
+license=('Apache')
+depends=('python')
+makedepends=('git' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/e2/d2/d3871f331abe0b65c45556f91d6443305ae403009f11aceeddffa9bd1b6c/$_pkgname-$pkgver.tar.gz")
+sha512sums=('ff86261684571f80f93d1889ad783cc6e750328ddca37d362fc7dd03573f3f4d9262861fb8b01d54619f31c25015fa435f2bd94197d0271368bb22a8daab9e39')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

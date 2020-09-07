@@ -1,0 +1,44 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=perl-net-cidr
+pkgver=0.19
+pkgrel=2
+pkgdesc='Manipulate IPv4/IPv6 netblocks in CIDR notation.'
+arch=('any')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl')
+url='http://search.cpan.org/dist/Net-CIDR'
+source=("http://search.cpan.org/CPAN/authors/id/M/MR/MRSAM/Net-CIDR-$pkgver.tar.gz")
+sha512sums=('2872fd4cd2dffdc56a3ad3ce4a2cb93221f2aae86c9f6875bd4a0323313c0dfa205ac9cd32173594aecfccd0d9b9c32123c3c8da3faf4109734aed43f5418820')
+
+# Function to change to the working directory and set
+# environment variables to override undesired options.
+_enviro() {
+  cd "Net-CIDR-$pkgver"
+
+  export \
+    PERL_MM_USE_DEFAULT=1 \
+    PERL_AUTOINSTALL=--skipdeps \
+    PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'" \
+    PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+    MODULEBUILDRC=/dev/null
+}
+
+build() {
+  _enviro
+
+  /usr/bin/perl Makefile.PL
+
+  make
+}
+
+package() {
+  _enviro
+
+  make install
+
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
+

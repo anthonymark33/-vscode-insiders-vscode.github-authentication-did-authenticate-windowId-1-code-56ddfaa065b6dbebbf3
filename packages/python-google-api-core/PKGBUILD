@@ -1,0 +1,29 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-api-core
+_pkgname=google-api-core
+pkgver=1.16.0
+pkgrel=1
+pkgdesc='Google API client core library.'
+arch=('any')
+url='https://pypi.org/project/google-api-core/#files'
+license=('Apache')
+depends=('python' 'python-googleapis-common-protos' 'python-pytz')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/b9/c6/b9483b94e85e4088198bc99c807a6a458800d278ae49f79a0dee0cfdc171/$_pkgname-$pkgver.tar.gz")
+sha512sums=('4897abf3ae59f84b6f0fa83c4704696649058028ed3d7439b2372cc9659634bd0f8eee2bc7f0a5fa7dce06f7e47581eeded659b6cb545a4e40d05de0e060d8f7')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr --optimize=1 \
+    --skip-build
+}
+

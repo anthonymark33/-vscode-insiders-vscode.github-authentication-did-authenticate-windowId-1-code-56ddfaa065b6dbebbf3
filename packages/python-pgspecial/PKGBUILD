@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pgspecial
+pkgname=('python2-pgspecial' 'python-pgspecial')
+_pkgname=pgspecial
+pkgver=1.11.9
+pkgrel=1
+pkgdesc='Meta-commands handler for Postgres Database.'
+arch=('any')
+url='https://pypi.org/project/pgspecial/#files'
+license=('BSD')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/4e/0c/47957ad5b5cfb488344032326a4a013127b005929422bc5e9ee98bdf18ec/$_pkgname-$pkgver.tar.gz")
+sha512sums=('fcf5dbeaea5713ac282f6059d23f6534efd5f24301f9ac9ee01f096abd187af462872500b95420fda0e14c49fc7a9f1c9171d5cd2dee18b3a600ef6a9af967e5')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-pgspecial() {
+  depends=('python2' 'python2-click' 'python2-sqlparse')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-pgspecial() {
+  depends=('python' 'python-click' 'python-sqlparse')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

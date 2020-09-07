@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-filedepot
+pkgname=('python2-filedepot' 'python-filedepot')
+_pkgname=filedepot
+pkgver=0.7.1
+pkgrel=1
+pkgdesc='Toolkit for storing files and attachments in web applications.'
+arch=('any')
+url='https://pypi.org/project/filedepot/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/56/40/8755419cb2cd1be41690a5c15694c738c67ea84a84ad9128222c7a4477c1/$_pkgname-$pkgver.tar.gz")
+sha512sums=('78c4a3bdbe06570979baedf2f8fe9cf6c3a16acda5a32e0a2f635113594608240af348c6d0c7ba75c2e9f7d2dd248de24abe0000f6a82daa4e03ae9a4f34f240')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package_python2-filedepot() {
+  depends=('python2' 'python2-unidecode')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-filedepot() {
+  depends=('python' 'python-unidecode')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

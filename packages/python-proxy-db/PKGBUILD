@@ -1,0 +1,54 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-proxy-db
+pkgname=('python2-proxy-db' 'python-proxy-db')
+_pkgname=proxy-db
+pkgver=0.2.5
+pkgrel=1
+pkgdesc='Manage free and private proxies on local db for Python Projects.'
+arch=('any')
+url='https://pypi.org/project/proxy-db/#files'
+makedepends=('python2-setuptools' 'python-setuptools')
+license=('GPL3')
+source=("https://files.pythonhosted.org/packages/ba/97/0047f38b69333acad07f86dad5da1fab6745b7b962f122b3cafa9382f18f/$_pkgname-$pkgver.tar.gz")
+sha512sums=('b678484a787974014d56c3940662ba824d9bc8ab012f34c8d64645c3c1a8b8ef87f00e358201eeda267edc02148de6adc2bc48fffa2d3407f9ffc9c42f225e1f')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-py2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-py2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-proxy-db() {
+  depends=('python2' 'python2-requests' 'python2-click' 'python2-sqlalchemy'
+           'python2-beautifulsoup4' 'python2-geoip2')
+
+  cd "$_pkgname-$pkgver-py2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/proxy-db" "$pkgdir/usr/bin/proxy-db2"
+
+  rm -rf "$pkgdir/usr/lib/python2.7/site-packages/tests"
+}
+
+package_python-proxy-db() {
+  depends=('python' 'python-requests' 'python-click' 'python-sqlalchemy'
+           'python-beautifulsoup4' 'python-geoip2')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.8/site-packages/tests"
+}
+

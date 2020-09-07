@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pysmb
+pkgname=('python2-pysmb' 'python-pysmb')
+_pkgname=pysmb
+pkgver=1.1.28
+pkgrel=1
+pkgdesc='An experimental SMB/CIFS library written in Python to support file sharing between Windows and Linux machines.'
+arch=('any')
+url='https://pypi.org/project/pysmb/#files'
+license=('GPL')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/7d/22/b1a857262871f048a58b1ea555183dae6a9255bb77a8e131266ea24bee01/$_pkgname-$pkgver.zip")
+sha512sums=('347602b2c4221e06d730fd52c61ebdae385c7dd791738b871cb88c14b810cdbc76138c139184e1443f3790e2fe79c55b8d885855ac04804173c8edc4208615ea')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-pysmb() {
+  depends=('python2' 'python2-pyasn1')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-pysmb() {
+  depends=('python' 'python-pyasn1')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

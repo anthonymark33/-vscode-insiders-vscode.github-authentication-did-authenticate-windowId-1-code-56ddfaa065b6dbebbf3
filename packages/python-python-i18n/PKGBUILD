@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-python-i18n
+pkgname=('python2-python-i18n' 'python-python-i18n')
+_pkgname=python-i18n
+pkgver=0.3.7
+pkgrel=2
+pkgdesc='Translation library for Python.'
+arch=('any')
+url='https://pypi.org/project/python-i18n/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/09/bb/72d1a4996d628fe3047b3c45ce2a6be4c289f6c42715c55f7a5be858a23a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f030b63d5a7866d416a9fbc47e53175162c313939d23e4fdc0f9f567386553993f71c80bd65dce66d0f8f885820e74f553ec966fbaa4b046b6eee039d44009f4')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-python-i18n() {
+  depends=('python2' 'python2-yaml')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-python-i18n() {
+  depends=('python' 'python-yaml')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

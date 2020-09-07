@@ -1,0 +1,41 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=sploitctl
+pkgver=3.0.1
+pkgrel=1
+epoch=1
+groups=('blackarch' 'blackarch-automation' 'blackarch-exploitation')
+pkgdesc='Fetch, install and search exploit archives from exploit sites like exploit-db and packetstorm.'
+arch=('any')
+url='https://github.com/BlackArch/sploitctl'
+license=('GPL3')
+depends=('python' 'python-requests' 'python-termcolor' 'python-pygit2')
+source=("https://github.com/BlackArch/$pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('0f2c6d433075a470b3841cf9902b2f20e60d3b049ddb344125eecc7f02e52ec44969cdd415b38294bfaebf5f314be6293a7d33504b7970a859654060cd867cb1')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm 644 "bash-completion/$pkgname" \
+    "$pkgdir/usr/share/bash-completion/completions/$pkgname"
+  install -Dm 644 "man/$pkgname.1" "$pkgdir/usr/share/man/man1/$pkgname.1"
+
+  rm -r README.md LICENSE bash-completion
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec /usr/share/$pkgname/$pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+  chmod 777 "$pkgdir/usr/share/$pkgname/repo.json"
+}
+

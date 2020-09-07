@@ -1,0 +1,38 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-halo
+_pkgname=halo
+pkgver=0.0.29
+pkgrel=1
+pkgdesc='Beautiful terminal spinners in Python.'
+arch=('any')
+url='https://pypi.org/project/halo/#files'
+license=('MIT')
+depends=('python' 'python-backports.shutil-get-terminal-size'
+         'python-colorama' 'python-cursor' 'python-log_symbols'
+         'python-six' 'python-spinners' 'python-termcolor')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/9e/5e/ff4ebf3820910e8e8a810db7287b6d99b96e09eadbc14d067e423ef07c6c/$_pkgname-$pkgver.tar.gz"
+        'requirements.txt.patch')
+sha512sums=('23234f8ad67fb72eeb5a1ed38f1dafc6da468ca4b5cf4e09fe2b3312c14b107a0c8c10619c893e7b17e9099206260bee031ddbab2af63d079fdb054eba7058f3'
+            '34e967f72e5fae82c3d88f7c9dc5cf25afaa9b9e4f6f479ab36207cd54b4e3e98bc7a91a340b11a556c771a68d214d5d0fce6ac2de51a4e753259e6fc0ffd710')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  patch < ../requirements.txt.patch
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

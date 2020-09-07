@@ -1,0 +1,39 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=objection
+pkgver=1.9.1
+pkgrel=1
+pkgdesc='Instrumented Mobile Pentest Framework.'
+groups=('blackarch' 'blackarch-mobile' 'blackarch-reversing' 'blackarch-binary')
+arch=('any')
+url='https://pypi.org/project/objection/#files'
+license=('custom:unknown')
+depends=('python-frida' 'python-frida-tools' 'python-prompt_toolkit'
+         'python-click' 'python-tabulate' 'python-requests' 'python-flask'
+         'python-delegator.py' 'python-pexpect' 'python-litecli')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/e2/73/6eb1ba5a16bc264657262c9dae0b724cea86d8742385c2152eed8aabba5a/$pkgname-$pkgver.tar.gz"
+        'requirements.txt.patch')
+sha512sums=('67fef76ac44acecdbfb0ffd4c142d82b38a8f10003845fd19b984cc43566aa84d5a6831c06757ac253e719bd1340f7ddd78bd94e3a5653490abe07db4c1fff3a'
+            'e6e3319ffb67c3e3fb719b70dd99d4971ebb8f9013a83bcec313eb29e3d93d10add2bcbd184a9918f6d9030db0c0ed8c73b31780b3ee582b6a88a3d1fca78b67')
+
+prepare() {
+  echo
+  #patch -p1 < requirements.txt.patch
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.8/site-packages/tests"
+}
+

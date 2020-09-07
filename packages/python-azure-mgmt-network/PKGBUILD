@@ -1,0 +1,28 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-mgmt-network
+_pkgname=azure-mgmt-network
+pkgver=10.0.0
+pkgrel=1
+pkgdesc='Microsoft Azure Network Management Client Library for Python.'
+arch=('any')
+url='https://pypi.org/project/azure-mgmt-network/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/ea/14/321a51526f300d2d75bb937777e16ce7e2552719ea1b2b40823c818c5ac1/$_pkgname-$pkgver.zip")
+sha512sums=('63791de022fba8ca32254952fba628f5e120d9e21da19967054039225d3ce0282320a23e19509988eab6f0d1207a09cf9359bb1cd29bc64784506737ae61ef29')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

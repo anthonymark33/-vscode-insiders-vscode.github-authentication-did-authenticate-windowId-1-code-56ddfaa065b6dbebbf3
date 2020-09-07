@@ -1,0 +1,28 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-msldap
+_pkgname=msldap
+pkgver=0.2.13
+pkgrel=1
+pkgdesc='Python library to play with MS LDAP.'
+arch=('any')
+url='https://pypi.org/project/msldap/#files'
+license=('MIT')
+depends=('python' 'python-ldap3' 'python-asn1crypto' 'python-winsspi')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/be/a7/b4234236bff2b8d0034f5da6c383cbb632291950ca4013b08d108d78372b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('d2c7af513505087fe60bfba46bf8ca6510b83e40d0d04fcc4680e5668f31cb3d39692d7ee316a748dd95e8d6ce829c2b74828fd566443de1a9ed75210f0dbe8f')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

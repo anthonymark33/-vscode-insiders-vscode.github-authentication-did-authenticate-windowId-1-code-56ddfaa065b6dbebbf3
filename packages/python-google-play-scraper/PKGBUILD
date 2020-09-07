@@ -1,0 +1,46 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-google-play-scraper
+pkgname=('python2-google-play-scraper' 'python-google-play-scraper')
+_pkgname=google-play-scraper
+pkgver=0.0.2.2
+pkgrel=1
+pkgdesc='Provides APIs to easily crawl the Google Play Store for Python without no external dependencies.'
+arch=('any')
+url='https://pypi.org/project/google-play-scraper/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/cb/89/bc7279683a9224dc4239dc642a6cf2ce8a103d7f27a2ab69a8311d391777/$_pkgname-$pkgver.tar.gz")
+sha512sums=('50ecd58e83ee555e198ea265e4139370067dd1008de3204b08ca4ca450db15ecaf85cb2e8ef3404baab16be19ddede27f97b990f06a7008ddc1d89e2ed0ced84')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-google-play-scraper() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+
+package_python-google-play-scraper() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

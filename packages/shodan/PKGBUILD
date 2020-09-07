@@ -1,0 +1,55 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=shodan
+pkgname=('python2-shodan' 'python-shodan')
+pkgver=1.22.0
+pkgrel=1
+pkgdesc='Python library and command-line utility for Shodan (https://developer.shodan.io).'
+groups=('blackarch' 'blackarch-recon' 'blackarch-scanner'
+        'blackarch-automation')
+arch=('any')
+url='https://pypi.org/project/shodan/#files'
+makedepends=('python-setuptools' 'python2-setuptools')
+license=('MIT')
+source=("https://files.pythonhosted.org/packages/40/2a/58e86678c50c96396a64190f05513a4f2f211332da5f6ed13e2e596c7c5c/$pkgbase-$pkgver.tar.gz")
+sha512sums=('600148fe3d468695e061cd79b739ffe7b5f280c4d638ea8f7ca7f8c1d3f08aade2d99014813e655286ddc1b671c156adfb0e8d28aaf115a377253161688df1ae')
+
+prepare() {
+  cp -a "$pkgbase-$pkgver"{,-2}
+}
+
+build_python-shodan() {
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$pkgbase-$pkgver"
+
+  python2 setup.py build
+}
+
+package_python2-shodan() {
+  depends=('python2' 'python2-requests' 'python2-simplejson' 'python2-click'
+           'python2-click-plugins' 'python2-xlsxwriter' 'python2-colorama')
+
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/${pkgname[0]}/LICENSE"
+
+  mv "$pkgdir/usr/bin/$pkgbase" "$pkgdir/usr/bin/${pkgbase}2"
+}
+
+package_python-shodan() {
+  depends=('python' 'python-requests' 'python-simplejson' 'python-click'
+           'python-click-plugins' 'python-xlsxwriter' 'python-colorama')
+
+  cd "$pkgbase-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/${pkgname[1]}/LICENSE"
+}
+

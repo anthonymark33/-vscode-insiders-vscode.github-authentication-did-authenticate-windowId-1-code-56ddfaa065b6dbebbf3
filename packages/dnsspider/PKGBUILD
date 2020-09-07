@@ -1,0 +1,19 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=dnsspider
+pkgver=1.2
+pkgrel=2
+groups=('blackarch' 'blackarch-recon' 'blackarch-scanner')
+pkgdesc='A very fast multithreaded bruteforcer of subdomains that leverages a wordlist and/or character permutation.'
+url='http://nullsecurity.net/tools/scanner.html'
+arch=('any')
+license=('custom:unknown')
+depends=('python' 'python-dnspython')
+source=('https://github.com/nullsecuritynet/tools/raw/master/scanner/dnsspider/release/dnsspider.py')
+sha512sums=('6b09f8bd9ccac704af12537341aafba6c52e5de7ae3852e977a824a1d0926cb6e68777dff918b8dc5cb5b69efbb3fa74281e8f128196556de41f51a96c056ebd')
+
+package() {
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+}
+

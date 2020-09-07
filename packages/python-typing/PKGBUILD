@@ -1,0 +1,30 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-typing
+_pkgname=typing
+pkgver=3.7.4.1
+pkgrel=2
+pkgdesc='Type Hints for Python.'
+arch=('any')
+url='https://pypi.org/project/typing/#files'
+license=('PSF')
+depends=('python')
+makedepends=('python-setuptools')
+options=(!emptydirs)
+source=("https://files.pythonhosted.org/packages/67/b0/b2ea2bd67bfb80ea5d12a5baa1d12bda002cab3b6c9b48f7708cd40c34bf/$_pkgname-$pkgver.tar.gz")
+sha512sums=('5f5080bf66b1de094b7984ed3d1de22651de8ca018ffde927dfa67fe65b13f91602a877faa24e73d44558638b609be276b924b894d63999bb93b0657a2d5ec6e')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

@@ -1,0 +1,30 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-enlighten
+_pkgname=enlighten
+pkgver=1.5.1
+pkgrel=1
+pkgdesc='Enlighten Progress Bar.'
+arch=('any')
+url='https://pypi.org/project/enlighten/#files'
+depends=('python' 'python-blessed' 'python-wcwidth' 'python-six')
+makedepends=('python-setuptools')
+license=('MIT')
+options=(!emptydirs)
+source=("https://files.pythonhosted.org/packages/95/12/dcdf33dee4ff19290e294e61940d5595ee4d6634529f7396593088e233e7/$_pkgname-$pkgver.tar.gz")
+sha512sums=('fa813479232a9596b06b9d4e71748e89e51a5b703b9d1fede67a85d696ed48d962e34f6af85a7cd5a3422c413725dbe7fc56ec4a11e2c165e4e009d9fa3bb726')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

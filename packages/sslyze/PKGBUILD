@@ -1,0 +1,39 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=sslyze
+pkgver=3.0.1
+pkgrel=1
+groups=('blackarch' 'blackarch-crypto' 'blackarch-scanner')
+pkgdesc='Python tool for analyzing the configuration of SSL servers and for identifying misconfigurations.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/nabla-c0d3/sslyze'
+license=('GPL2')
+depends=('python' 'python-tls-parser' 'python-cryptography' 'python-nassl'
+         'python-typing_extensions')
+makedepends=('python-setuptools')
+source=("https://github.com/nabla-c0d3/sslyze/archive/${pkgver}.zip"
+        'setup.py.patch')
+sha512sums=('75c45f568565e29963b27f0929dc7cb71f280ed049761d7c34d1103cd11fb810e51153aa32721247db09c569599f43937bfa04211adca740073283bbe948e856'
+            '1409514a50d30be947ea036b9508a35c140d472a566ed08c807d3942b997a0dc8ebbc0612dce18743aa93802c8c17832a0c47779d3bfd12142f4d760593acc9f')
+
+prepare() {
+  patch -p1 < setup.py.patch
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf "$pkgdir/usr/lib/python3.8/site-packages/tests/openssl_server"
+}
+

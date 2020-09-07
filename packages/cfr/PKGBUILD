@@ -1,0 +1,31 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=cfr
+pkgver=148
+pkgrel=1
+groups=('blackarch' 'blackarch-decompiler')
+pkgdesc='Another Java decompiler.'
+arch=('any')
+url='http://www.benf.org/other/cfr/'
+license=('MIT')
+depends=('java-runtime' 'java-environment' 'bash')
+source=("https://www.benf.org/other/$pkgname/$pkgname-0.${pkgver}.jar")
+noextract=("${pkgname}_0_${pkgver}.jar")
+sha512sums=('5c9c1d36149e6176b5fc1764b376b7665af7520d9fa3613d7c2ffafcbf7e2170a56023426e89cc6ea7d1e736c889fb2d6ecb052bc53f9d9236a61c2a2a8df508')
+
+package() {
+
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 644 "$pkgname-0.${pkgver}.jar" \
+    "$pkgdir/usr/share/$pkgname/$pkgname.jar"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec java -jar /usr/share/$pkgname/$pkgname.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

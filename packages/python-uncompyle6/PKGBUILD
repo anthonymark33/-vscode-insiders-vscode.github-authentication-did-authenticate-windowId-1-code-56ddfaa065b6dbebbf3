@@ -1,0 +1,33 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-uncompyle6
+_pkgname=uncompyle6
+pkgver=3.6.5
+pkgrel=1
+pkgdesc='A Python cross-version decompiler.'
+groups=('blackarch' 'blackarch-decompiler')
+arch=('any')
+url='https://github.com/rocky/python-uncompyle6'
+license=('GPL3')
+depends=('python' 'python-hypothesis' 'python-pytest' 'python-spark-parser'
+         'python-xdis')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/8c/d4/4da3a20760a399062f7ee4b40350b0bc8769f3a419eae7342213859c34bb/$_pkgname-$pkgver.tar.gz")
+sha512sums=('c0cb3e30a329194cd5c0e7395752708bdd1bffd14f3afadb1e0d3231726bb4f4d43f93bce9f9929d4b27ca1a70362022893b17b76e15a3f1f06ac5c5f848032a')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.rst
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

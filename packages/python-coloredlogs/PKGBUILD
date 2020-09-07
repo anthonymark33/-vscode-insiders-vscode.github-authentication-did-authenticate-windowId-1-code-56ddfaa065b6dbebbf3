@@ -1,0 +1,51 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-coloredlogs
+pkgname=('python2-coloredlogs' 'python-coloredlogs')
+_pkgname=coloredlogs
+pkgver=14.0
+pkgrel=1
+pkgdesc='Colored stream handler for the logging module.'
+arch=('any')
+url='https://pypi.org/project/coloredlogs/#files'
+makedepends=('python2-setuptools' 'python-setuptools')
+license=('MIT')
+options=(!emptydirs)
+source=("https://files.pythonhosted.org/packages/84/1b/1ecdd371fa68839cfbda15cc671d0f6c92d2c42688df995a9bf6e36f3511/$_pkgname-$pkgver.tar.gz")
+sha512sums=('3434a95f3216d19af5d7a48324e5afd5e975f92d9f6b99f40df2c0a635f1738e0bc6d7277a549a42a0fec5a8601f82908c4b0205ceeb3666f49210f66fe58671')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-coloredlogs() {
+  depends=('python2' 'python2-humanfriendly')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+
+  mv "$pkgdir/usr/bin/coloredlogs" "$pkgdir/usr/bin/coloredlogs2"
+}
+
+package_python-coloredlogs() {
+  depends=('python' 'python-humanfriendly')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

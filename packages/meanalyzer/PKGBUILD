@@ -1,0 +1,37 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=meanalyzer
+pkgver=1.98.0
+pkgrel=1
+pkgdesc='Intel Engine Firmware Analysis Tool.'
+arch=('x86_64')
+groups=('blackarch' 'blackarch-firmware')
+url='https://github.com/platomav/MEAnalyzer'
+license=('GPL3')
+depends=('python' 'python-colorama' 'python-crccheck' 'python-ptable-boxchar')
+source=("https://github.com/platomav/MEAnalyzer/archive/v$pkgver-r180.tar.gz")
+sha512sums=('273e3b16e3b7d0e23572c9ffeaeb221fda903f0c6fd4ff9567412042ebdc58c0013233c1bba8187a9a7dc796e3ff2f39503735aeacf88e237b3426b167e208e0')
+noextract=("ME_Analyzer_v${pkgver}_r144.rar")
+
+package() {
+  cd "MEAnalyzer-$pkgver-r180"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" Changelog.txt README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf Changelog.txt README.md LICENSE
+
+  cp -a --no-preserve=owner * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python MEA.py "\$@"
+EOF
+   chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

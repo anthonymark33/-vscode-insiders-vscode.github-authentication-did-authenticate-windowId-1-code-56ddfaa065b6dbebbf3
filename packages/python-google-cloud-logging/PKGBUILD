@@ -1,0 +1,29 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-cloud-logging
+_pkgname=google-cloud-logging
+pkgver=1.15.0
+pkgrel=1
+pkgdesc='Stackdriver Logging API client library.'
+arch=('any')
+url='https://pypi.org/project/google-cloud-logging/#files'
+license=('Apache')
+depends=('python' 'python-google-api-core' 'python-google-cloud-core')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/cd/e8/f2ebaa80a8684584498e9b90ab4f8947e305baddd84656b356753fa2b202/$_pkgname-$pkgver.tar.gz")
+sha512sums=('2087fb857b8e8fe32e5dcbf1fd2a4217aaeeb833d5911beb84f0bfe1adcee8062b12e6994ab5c16512b4cfa5878314390316683926795d8b5cf3f7c467ab33e9')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

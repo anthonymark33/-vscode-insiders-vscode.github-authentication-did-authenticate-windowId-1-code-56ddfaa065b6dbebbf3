@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python2-webargs
+pkgname=('python2-webargs' 'python-webargs')
+_pkgname=webargs
+pkgver=6.0.0
+pkgrel=1
+pkgdesc='A friendly library for parsing and validating HTTP request arguments, with built-in support for popular web frameworks, including Flask, Django, Bottle, Tornado, Pyramid, webapp2, Falcon, and aiohttp.'
+arch=('any')
+url='https://pypi.org/project/webargs/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/7d/b8/12526b08e3965b6a2891e1b97f0962be7d21a2082fb8711191f819fcaa7c/$_pkgname-$pkgver.tar.gz")
+sha512sums=('8fe111236b210ddcdfc2c8b9f922d6ac0bbf4257552002eb24cb946d896dc18f96b003dd3a779ead0befcca6594253382c3f79ad566b78b3c1c37b085b0277f6')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-webargs() {
+  depends=('python2' 'python2-marshmallow' 'python2-simplejson')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-webargs() {
+  depends=('python' 'python-marshmallow')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

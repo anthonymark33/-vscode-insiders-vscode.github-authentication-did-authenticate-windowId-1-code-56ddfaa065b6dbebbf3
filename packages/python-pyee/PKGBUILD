@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pyee
+pkgname=('python2-pyee' 'python-pyee')
+_pkgname=pyee
+pkgver=7.0.1
+pkgrel=1
+pkgdesc='A port of node.js EventEmitter to python.'
+arch=('any')
+url='https://pypi.org/project/pyee/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python2-pytest-runner' 'python-setuptools'
+			 'python-pytest-runner' 'python-pytest-asyncio'
+             'python-vcversioner')
+source=("https://files.pythonhosted.org/packages/de/b1/2cf38e5375194f5d041efe66406b8b8282dc37d41b6c98d5f87ec556cb5e/$_pkgname-$pkgver.tar.gz")
+sha512sums=('747b52fb32b199562e5815368145b54ca0bb929932d432d4d320dbb8cdcb913e47a054cf4ed4573e1ca8eb08d5d9d249bfe4cffb153b9d4157d5046341981b15')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-pyee() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+
+package_python-pyee() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

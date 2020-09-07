@@ -1,0 +1,28 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-loguru
+_pkgname=loguru
+pkgver=0.4.1
+pkgrel=1
+pkgdesc='Python logging made (stupidly) simple.'
+arch=('any')
+url='https://pypi.org/project/loguru/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/b8/b7/ec749f8f95454d6043900f99d8e6ec48be89f62d861e909c3eb0407c54a7/$_pkgname-$pkgver.tar.gz")
+sha512sums=('56bc9170ab8c0fcc1676e862dedb3c48fb4a18da30e9186957d78ce7f4e32eb0277637d830dc47ece261e09e1f280b412d29d900a6ae88d85b3ef81718a1c982')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

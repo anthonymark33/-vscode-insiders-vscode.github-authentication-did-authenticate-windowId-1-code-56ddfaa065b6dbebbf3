@@ -1,0 +1,32 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=scap-security-guide
+pkgver=0.1.47
+pkgrel=1
+pkgdesc='Security compliance content in SCAP, Bash, Ansible, and other formats.'
+arch=('any')
+groups=('blackarch' 'blackarch-automation' 'blackarch-defensive'
+        'blackarch-scanner')
+url='https://www.open-scap.org/security-policies/scap-security-guide/'
+license=('BSD3')
+depends=()
+makedepends=('git')
+optdepends=('openscap' 'scap-workbench')
+source=("https://github.com/ComplianceAsCode/content/releases/download/v$pkgver/$pkgname-$pkgver.zip")
+sha512sums=('7d8bcdf8d29776cb0728a17de9261d6a8ae35e4b84373630b704742cadc36a6c652ab509e03b2164bd2c13cdd607660094002b7166c8f6905f69c6cefea6b85b')
+
+pkgver() {
+  git ls-remote --sort=v:refname -t --refs \
+    'https://github.com/ComplianceAsCode/content' 'v*' |
+    grep -v 'InitialDraft' | sed -e 's/.*v//' -e '$!d'
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname/"
+
+  cp -a ./* "$pkgdir/usr/share/$pkgname/"
+}
+

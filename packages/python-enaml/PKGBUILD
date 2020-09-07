@@ -1,0 +1,53 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-enaml
+pkgname=('python2-enaml' 'python-enaml')
+_pkgname=enaml
+pkgver=0.11.0
+pkgrel=1
+pkgdesc='Declarative DSL for building rich user interfaces in Python.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/enaml/#files'
+license=('BSD')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/c9/c1/049c36315779021192821b86880499fa402c7d7ed2e5f4011eb1b22f4a10/$_pkgname-$pkgver.tar.gz")
+sha512sums=('b6ac53b94a0be61a6ddecfdd45120be3314b2fdbac74c6fc5f537defb9ce34746e5dbd5ca48ae605bb588a668c072c6331c72272abf580830cfd6e749842802f')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-enaml() {
+  depends=('python2' 'python2-ply' 'python2-kiwisolver' 'python2-atom'
+           'python2-qtpy')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+
+  mv "$pkgdir/usr/bin/enaml-compileall" "$pkgdir/usr/bin/enaml-compileall2"
+  mv "$pkgdir/usr/bin/enaml-run" "$pkgdir/usr/bin/enaml-run2"
+}
+
+package_python-enaml() {
+  depends=('python' 'python-ply' 'python-kiwisolver' 'python-atom'
+           'python-qtpy')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

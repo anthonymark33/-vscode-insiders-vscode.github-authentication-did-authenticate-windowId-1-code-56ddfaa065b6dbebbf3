@@ -1,0 +1,29 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-mgmt-resource
+_pkgname=azure-mgmt-resource
+pkgver=9.0.0
+pkgrel=1
+pkgdesc='Microsoft Azure Resource Management Client Library for Python.'
+arch=('any')
+url='https://pypi.org/project/azure-mgmt-resource/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/f7/27/f4ee7662fa0d5ac043d4e9daff5e8b0299a6a4f57d3b572a30da36e1b0e1/$_pkgname-$pkgver.zip")
+sha512sums=('ca169ff47eb4a400c22b71d609d8a74b9ae87ea5cb79b2ab2824008342679b9da970052310df6d14984efdaa7e419bbad279ad3e07dea40050cd63631e557014')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

@@ -1,0 +1,32 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libvslvm-python
+pkgname=('python2-libvslvm-python' 'python-libvslvm-python')
+_pkgname=libvslvm-python
+pkgver=20200102
+pkgrel=1
+pkgdesc='Library and tools to access the Linux Logical Volume Manager (LVM) volume system format.'
+url='https://github.com/libyal/libvslvm'
+arch=('x86_64' 'aarch64')
+license=('LGPLv3')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/40/82/6bfc767d52d17a5b9bee7d9a42bf16b678ba9eaff9c39fe8d01dc8aec083/$_pkgname-$pkgver.tar.gz")
+sha512sums=('bb675ca5ad4a86681a9bff0ec04f1534a0563d41ff6b1461b065c1098b70892db7ff9fbffc72cf243092b23d176e245ec5906bf7c3dc83b9f617d55b4665c142')
+
+package_python2-libvslvm-python() {
+  depends=('python2')
+
+  cd "libvslvm-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python-libvslvm-python() {
+  depends=('python')
+
+  cd "libvslvm-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

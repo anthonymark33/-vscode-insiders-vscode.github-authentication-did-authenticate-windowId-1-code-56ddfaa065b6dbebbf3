@@ -1,0 +1,28 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=python-nest-asyncio
+_pkgname=nest_asyncio
+pkgver=1.3.2
+pkgrel=1
+pkgdesc='Patch asyncio to allow nested event loops.'
+arch=('any')
+url='https://pypi.org/project/nest-asyncio/#files'
+license=('BSD')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/bc/62/3db1c9baa523df52910d064f8d6746d4d5167a12964b07fc8564841663c3/nest_asyncio-$pkgver.tar.gz")
+sha512sums=('b24037d302194f1aac8daef9e2d1d24098a596d8eec81bb1c723cd633350e6877d1b249a06343ff0cc4ea3e51a0886e0e0d0ad45dea9b0a207f9776190123fac')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

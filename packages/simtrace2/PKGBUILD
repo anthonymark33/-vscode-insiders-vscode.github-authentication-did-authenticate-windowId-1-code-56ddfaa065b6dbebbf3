@@ -1,0 +1,40 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=simtrace2
+pkgver=900.f46de7b
+pkgrel=1
+pkgdesc='Host utilities to communicate with SIMtrace2 USB Devices.'
+arch=('x86_64' 'aarch64')
+groups=('blackarch' 'blackarch-radio')
+url='https://osmocom.org/projects/simtrace2/wiki'
+license=('GPL')
+depends=('libosmocore' 'libusb' 'pcsclite' 'talloc')
+makedepends=('git')
+source=('git+git://git.osmocom.org/simtrace2.git')
+sha512sums=('SKIP')
+install="$pkgname.install"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "$pkgname/host"
+
+  make
+}
+
+package() {
+  cd "$pkgname/host"
+
+  install -Dm 755 -t "$pkgdir/usr/bin/" simtrace2-list simtrace2-remsim \
+    simtrace2-remsim-usb2udp simtrace2-sniff
+  install -Dm 644 99-simtrace2.rules \
+    "$pkgdir/etc/udev/rules.d/99-simtrace2.rules"
+  install -Dm 644 "$srcdir/$pkgname/README.md" \
+    "$pkgdir/usr/share/doc/$pkgname/README.md"
+}
+

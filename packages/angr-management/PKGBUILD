@@ -1,0 +1,36 @@
+# This file is part of BlackArch Linux ( http://blackarch.org ).
+# See COPYING for license details.
+
+pkgname=angr-management
+pkgver=8.19.10.30
+pkgrel=1
+groups=('blackarch' 'blackarch-binary' 'blackarch-disassembler'
+        'blackarch-reversing')
+pkgdesc='This is the GUI for angr.'
+arch=('any')
+url='https://pypi.org/project/angr-management/#files'
+license=('custom:unknown')
+depends=('angr' 'python' 'python-websocket-client' 'python-pyzmq' 'ipython'
+         'python-pyside' 'python-pygraphviz' 'python-enaml' 'python-simuvex'
+         'python-grandalf' 'python-qtconsole' 'python-atom' 'python-pygments'
+         'python-qtconsole' 'pyside2')
+makedepends=('git' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/e1/b4/961104e99d739de6cca402abb66ce5d4ad7fd333a5e45039af6dd9bd74d0/$pkgname-$pkgver.tar.gz")
+sha512sums=('c9584e3b4600f32783bef0020798cec64c9713d145084140651a1c21a694317f5562fc99494a645350c7b5d72d91915f387fb71ec107e59b2e119d390cce85f9')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

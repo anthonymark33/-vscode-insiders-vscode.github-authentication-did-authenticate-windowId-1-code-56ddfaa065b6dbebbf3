@@ -1,0 +1,41 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=burpsuite
+pkgver=2020.2.1
+pkgrel=1
+epoch=1
+groups=('blackarch' 'blackarch-fuzzer' 'blackarch-proxy' 'blackarch-scanner'
+        'blackarch-webapp')
+pkgdesc='An integrated platform for attacking web applications (community edition).'
+arch=('any')
+url='http://portswigger.net/burp/'
+depends=('jdk8-openjdk' 'giflib')
+license=('custom')
+noextract=('burpsuite.jar')
+source=("$pkgname.jar::https://portswigger.net/burp/releases/download?product=community&version=$pkgver&type=jar"
+        'LICENSE'
+        'burpsuite.desktop'
+        'icon64.png')
+sha512sums=('b33e10469200525edb41ec9d2a11f60ed88e57a463ebe01fc9aab6850fb90107fbc89493f89182ee44c7f32e27c7af494701f417182054a08b95118b36498181'
+            '07f646ce79e4e259c8da4a16ecd9b0149f09cd047ab42bfb758dc1cd4871710866e4dae6cda572f96fb49d0b156e64dd7b0a78904d9d367d41136214de5488a2'
+            '87790fac549e165f93f4e1dcaff93484957f20e7530e8b51586a22f4db594f6bfae730e4748e809c9b127571d764b026432cdaf47c282469a4ab42b037245895'
+            '928083e0189ce50304c4b32f8f6ef56be79881090bffdaddb5e990a59186ed2596c03293255693d488a47519e6da4e969e74e9bfe22a0f6ca53491a4e0749575')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/"{applications,pixmaps,burpsuite,licenses/burpsuite}
+
+  install -Dm 644 "$pkgname.jar" "$pkgdir/usr/share/$pkgname/$pkgname.jar"
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm 644 "$pkgname.desktop" "$pkgdir/usr/share/applications/"
+  install -Dm 644 icon64.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec \$JAVA_HOME/bin/java -jar /usr/share/$pkgname/$pkgname.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

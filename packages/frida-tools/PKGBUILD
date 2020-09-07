@@ -1,0 +1,56 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=frida-tools
+pkgname=('python2-frida-tools' 'python-frida-tools')
+pkgver=7.2.0
+pkgrel=1
+pkgdesc='Frida CLI tools.'
+groups=('blackarch' 'blackarch-mobile' 'blackarch-binary' 'blackarch-reversing')
+arch=('any')
+url='https://pypi.org/project/frida-tools/#files'
+license=('custom:unknown')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/ba/07/baa9124b365d69d3e9e0e099dc996f4a7fb7d66e01327a70133cb5d64373/$pkgbase-$pkgver.tar.gz"
+        'setup.py.patch')
+sha512sums=('ecea9d8de9498ecfeb9eb435aceaf7e4ec8663f75d2a7b7ca926732a24fcab34ea0e96d53707c87266300eb7a0fbe6ab911733cc2d633d76cf6258f9aca701e6'
+            'e2d2d7a50b4ec57038e02375973b7f34568320125783585ee461b14ea032e99b12371d05a7d6c6dffaa27d3fd8e642f5e5ae491dcc4e0d9b963e494dc82361b5')
+
+prepare() {
+  #patch -p1 < setup.py.patch
+
+  cp -a "$pkgbase-$pkgver"{,-2}
+}
+
+build() {
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$pkgbase-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-frida-tools() {
+  depends=('python2' 'python2-frida' 'python2-colorama' 'python2-prompt_toolkit'
+           'python2-pygments' 'libimobiledevice')
+
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  for i in "$pkgdir/usr/bin/"* ; do
+    mv $i "${i}2"
+  done
+}
+
+package_python-frida-tools() {
+  depends=('python' 'python-frida' 'python-colorama' 'python-prompt_toolkit'
+           'python-pygments' 'libimobiledevice')
+
+  cd "$pkgbase-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

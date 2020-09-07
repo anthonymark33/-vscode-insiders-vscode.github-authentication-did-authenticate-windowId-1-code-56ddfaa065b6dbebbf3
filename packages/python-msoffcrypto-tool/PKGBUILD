@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-msoffcrypto-tool
+pkgname=('python2-msoffcrypto-tool' 'python-msoffcrypto-tool')
+_pkgname=msoffcrypto-tool
+pkgver=4.10.2
+pkgrel=1
+pkgdesc='A Python tool and library for decrypting MS Office files with passwords or other keys.'
+arch=('any')
+url='https://pypi.org/project/msoffcrypto-tool/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/cd/e5/cf5a81a177a75b9d95e78d5fe4c2b20116ebca7ef9cbf90a9b3324d46580/$_pkgname-$pkgver.tar.gz")
+sha512sums=('97877479547f6785c04be4e90683d8b5e8f5b44f45cb5ec10b92c5a3c5d391990254ec0775b134e440ee161188f652fb87396b73f6919d760fe62e3acdc8113d')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-msoffcrypto-tool() {
+  depends=('python2' 'python2-olefile' 'python2-cryptography')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/$_pkgname" "$pkgdir/usr/bin/${_pkgname}-2"
+}
+
+package_python-msoffcrypto-tool() {
+  depends=('python' 'python-olefile' 'python-cryptography')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

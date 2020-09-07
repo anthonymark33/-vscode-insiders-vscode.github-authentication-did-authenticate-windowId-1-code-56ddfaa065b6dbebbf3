@@ -1,0 +1,50 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pysqlite3
+pkgname=('python2-pysqlite3' 'python-pysqlite3')
+_pkgname=pysqlite3
+pkgver=0.4.2
+pkgrel=1
+pkgdesc='DB-API 2.0 interface for Sqlite 3.x.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/pysqlite3/#files'
+license=('zlib/libpng')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/06/1f/b806d2c35c9a587e11a4ec73a5314167761083397f3b47c6886a75c30dfc/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f52fb99f2adea0eea759bd2359f0dede8f32f7dfd58337379c28a4b980c6f2dcc69520aa2d95a583e5fd8a5870210c222c8d22acb72b487e110a7641973ea1b3')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-pysqlite3() {
+  depends=('python2' 'sqlite')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/${pkgname[0]}/LICENSE"
+}
+
+package_python-pysqlite3() {
+  depends=('python' 'sqlite')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/${pkgname[1]}/LICENSE"
+}
+

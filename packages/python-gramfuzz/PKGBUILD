@@ -1,0 +1,48 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-gramfuzz
+pkgname=('python2-gramfuzz' 'python-gramfuzz')
+_pkgname=gramfuzz
+pkgver=1.4.0
+pkgrel=1
+pkgdesc='A python-based grammar fuzzer.'
+arch=('any')
+url='https://pypi.org/project/gramfuzz/'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/6e/ae/656a60de6094fe9b923e1b4dc07b9dd964c133ec13a1146c9924e81e6ebb/$_pkgname-$pkgver.tar.gz")
+sha512sums=('108b4bab82b0a5bf1c43f14e4b9b7dd44f301660831646f484ddfa43f8c3529510bed12b04dde188bcaa26e77c1cbbc0a6acf027fdea025c457c396bfef04be2')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-gramfuzz() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-gramfuzz() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

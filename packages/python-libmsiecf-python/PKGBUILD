@@ -1,0 +1,32 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libmsiecf-python
+pkgname=('python2-libmsiecf-python' 'python-libmsiecf-python')
+_pkgname=libmsiecf-python
+pkgver=20191221
+pkgrel=1
+pkgdesc='Library and tools to access the Microsoft Internet Explorer (MSIE) Cache File (index.dat) files.'
+url='https://github.com/libyal/libmsiecf'
+arch=('x86_64' 'aarch64')
+license=('LGPLv3')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/d9/fa/28223815067182dd25aadff0f01c9adae3c2d6c577518220e9dfaa8c363e/$_pkgname-$pkgver.tar.gz")
+sha512sums=('1d9ddd6d7354f9e6b90d53144bb89172558db0c70c8d0e15e42714de726d758f36fcddf45d43159d7c342a764aa128c61c71458e4dcc9f641077b0faeb7ec797')
+
+package_python2-libmsiecf-python() {
+  depends=('python2')
+
+  cd "libmsiecf-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python-libmsiecf-python() {
+  depends=('python')
+
+  cd "libmsiecf-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

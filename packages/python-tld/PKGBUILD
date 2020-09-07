@@ -1,0 +1,50 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-tld
+pkgname=('python2-tld' 'python-tld')
+_pkgname=tld
+pkgver=0.11.11
+pkgrel=1
+pkgdesc='Extract the top level domain (TLD) from the URL given.'
+arch=('any')
+url='https://pypi.org/project/tld/#files'
+license=('MPL' 'LGPL')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/18/57/de6b83393f6c46e3a835d645cf778bbe01fd880e216df00dd035953fe986/$_pkgname-$pkgver.tar.gz")
+sha512sums=('0ef95de3b16259dcb1c8cd70da9e01cfe690b5e1be826f06e63fbafed3b19181fbf3375466910c0e3f273ffafe5d3579bf68eb50163ef6ae5cd52e903bbe0f54')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-tld() {
+  depends=('python2' 'python2-six')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+
+  mv "$pkgdir/usr/bin/update-tld-names" "$pkgdir/usr/bin/update-tld-names2"
+}
+
+package_python-tld() {
+  depends=('python' 'python-six')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

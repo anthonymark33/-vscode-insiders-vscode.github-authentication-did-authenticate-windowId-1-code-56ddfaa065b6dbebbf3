@@ -1,0 +1,32 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libregf-python
+pkgname=('python2-libregf-python' 'python-libregf-python')
+_pkgname=libregf-python
+pkgver=20191221
+pkgrel=1
+pkgdesc='Python bindings module for libregf.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.python.org/pypi/libregf-python/'
+license=('LGPL3')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/bf/9e/05faf4433e8dc97ad0b4d6eb2ef9f3150e9e243f0dab029f42b6c0006f60/$_pkgname-$pkgver.tar.gz")
+sha512sums=('0abcccd7a00525f4f11df8d6a48d1dbb90e1fe40d97cc2e1a61bf739d8b4233e604dcf2b1c3273b4e8fa519c3b7bff886eef6b2772c8399635dec1e4430990ce')
+
+package_python2-libregf-python() {
+  depends=('python2')
+
+  cd "libregf-$pkgver"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+
+package_python-libregf-python() {
+  depends=('python')
+
+  cd "libregf-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+

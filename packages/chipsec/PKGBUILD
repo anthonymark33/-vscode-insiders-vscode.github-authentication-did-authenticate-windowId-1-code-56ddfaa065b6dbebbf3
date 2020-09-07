@@ -1,0 +1,52 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=chipsec
+pkgver=1.4.9.r0.g604c3fc
+pkgrel=1
+epoch=3
+pkgdesc='Platform Security Assessment Framework.'
+groups=('blackarch' 'blackarch-hardware' 'blackarch-binary' 'blackarch-forensic'
+        'blackarch-scanner' 'blackarch-fuzzer')
+arch=('x86_64' 'armv8h')
+url='https://github.com/chipsec/chipsec'
+license=('GPL2')
+depends=('dkms' 'libelf' 'linux-headers' 'nasm' 'python' 'python-lxml')
+makedepends=('git' 'python-setuptools')
+source=("git+https://github.com/chipsec/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build \
+    --skip-driver
+
+  install -Dm 644 drivers/linux/dkms.conf \
+    "$pkgdir/usr/src/$pkgname-$pkgver/dkms.conf"
+  cp -a --no-preserve=ownership drivers/linux/* \
+    "$pkgdir/usr/src/$pkgname-$pkgver/"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md \
+    chipsec-manual.pdf
+  install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE COPYING
+
+  rm -rf "$pkgdir/usr/chipsec-manual.pdf"
+
+  for i in "$pkgdir/usr/bin/"*; do
+    mv $i "$(echo $i | tr -s '_' '-')"
+  done
+}
+
